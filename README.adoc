@@ -1,0 +1,63 @@
+= zlib-tiny
+
+A Clojure library designed to cover basic need of packing|unpacking exchange messages, storable chunks etc.
+Not more, but not less
+
+image:https://img.shields.io/clojars/v/net.tbt-post/zlib-tiny.svg[]
+
+== Usage
+
+Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `project.clj`:
+
+[source,clojure]
+----
+[net.tbt-post/zlib-tiny "0.1.0"]
+----
+
+[source, clojure]
+----
+;; ZLib Example
+
+(bytes->string
+ (force-byte-array
+  (inflate
+   (deflate
+    (str->bytes "test it!")))))
+
+(-> "test it!"
+    str->bytes
+    deflate
+    inflate
+    force-byte-array
+    bytes->string)
+----
+
+[source, clojure]
+----
+;; GZip Example
+
+(bytes->string
+ (gunzip
+  (gzip
+   (str->bytes "test it!"))))
+
+(-> "test it!"
+    str->bytes
+    gzip
+    gunzip
+    bytes->string)
+----
+
+== Manual Build
+
+[source,text]
+----
+$ lein install
+----
+
+== License
+
+Copyright © 2017
+
+Distributed under the http://www.apache.org/licenses/LICENSE-2.0[Apache License v 2.0]
+
