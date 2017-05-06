@@ -18,7 +18,7 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
 ----
 ;; ZLib Example
 
-(bytes->string
+(bytes->str
  (force-byte-array
   (inflate
    (deflate
@@ -29,14 +29,14 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
     deflate
     inflate
     force-byte-array
-    bytes->string)
+    bytes->str)
 ----
 
 [source, clojure]
 ----
 ;; GZip Example
 
-(bytes->string
+(bytes->str
  (gunzip
   (gzip
    (str->bytes "test it!"))))
@@ -45,7 +45,7 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
     str->bytes
     gzip
     gunzip
-    bytes->string)
+    bytes->str)
 ----
 
 == Manual Build
