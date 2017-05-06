@@ -18,10 +18,10 @@
   [^String s & [^String encoding]]
   (.getBytes s (or encoding "UTF-8")))
 
-(defn bytes->string
+(defn bytes->str
   "Returns the String corresponding to the given encoding's decoding of the
   given bytes. If no encoding is specified, UTF-8 is used."
-  [^"[B" b & [^String encoding]]
+  [^bytes b & [^String encoding]]
   (String. b (or encoding "UTF-8")))
 
 (defn gunzip
@@ -78,6 +78,6 @@
     (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)))))
 
 (comment "ZLib Example"
-         (bytes->string (force-byte-array (inflate (deflate (.getBytes "test it!"))))))
+         (bytes->str (force-byte-array (inflate (deflate (str->bytes "test it!"))))))
 (comment "GZip Example"
-         (bytes->string (gunzip (gzip (.getBytes "test it!")))))
+         (bytes->str (gunzip (gzip (str->bytes "test it!")))))
