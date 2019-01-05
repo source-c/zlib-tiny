@@ -10,7 +10,7 @@
                                  [org.apache.maven.wagon/wagon-ssh-external "3.0.0"]
                                  [org.apache.maven.wagon/wagon-http-lightweight "3.0.0"]]
 
-           :dependencies        [[org.clojure/clojure "1.9.0"]]}
+           :dependencies        [[org.clojure/clojure "1.10.0"]]}
 
  :uberjar {:aot      :all
            :jvm-opts #=(eval

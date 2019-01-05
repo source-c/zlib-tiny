@@ -1,11 +1,11 @@
 (ns zlib-tiny.core
   (:import (java.util.zip InflaterInputStream
-                          InflaterOutputStream
                           GZIPInputStream
                           GZIPOutputStream
                           DeflaterInputStream
                           Inflater
-                          ZipException)
+                          ZipException
+                          CRC32)
            (org.apache.commons.io IOUtils)
            (java.io ByteArrayInputStream
                     ByteArrayOutputStream
@@ -81,3 +81,9 @@
          (bytes->str (force-byte-array (inflate (deflate (str->bytes "test it!"))))))
 (comment "GZip Example"
          (bytes->str (gunzip (gzip (str->bytes "test it!")))))
+
+(defn crc32
+  ^Long [^bytes b]
+  (let [o (CRC32.)]
+    (.update o b)
+    (.getValue o)))
