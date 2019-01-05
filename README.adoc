@@ -11,7 +11,7 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
 
 [source,clojure]
 ----
-[net.tbt-post/zlib-tiny "0.2.1"]
+[net.tbt-post/zlib-tiny "0.2.3"]
 ----
 
 [source, clojure]
@@ -46,6 +46,13 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
     gzip
     gunzip
     bytes->str)
+----
+
+[source, clojure]
+----
+;; CRC32 example
+(crc32 (.getBytes "123456789"))
+=> 3421780262
 ----
 
 == Manual Build
