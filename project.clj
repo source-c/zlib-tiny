@@ -3,4 +3,4 @@
   :url "https://github.com/source-c/zlib-tiny"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[commons-io "2.8.0"]])
+  :dependencies [[commons-io "2.10.0"]])
