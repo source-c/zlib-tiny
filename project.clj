@@ -1,4 +1,4 @@
-(defproject net.tbt-post/zlib-tiny "0.2.5"
+(defproject net.tbt-post/zlib-tiny "0.3.0"
   :description "Tiny Clojure ZLib helper"
   :url "https://github.com/source-c/zlib-tiny"
   :license {:name "Eclipse Public License"
