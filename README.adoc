@@ -11,7 +11,7 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
 
 [source,clojure]
 ----
-[net.tbt-post/zlib-tiny "0.3.0"]
+[net.tbt-post/zlib-tiny "0.3.1"]
 ----
 
 === Compress
