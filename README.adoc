@@ -1,7 +1,7 @@
 = zlib-tiny
 
-A Clojure library designed to cover basic need of packing|unpacking exchange messages, storable chunks etc.
-Not more, but not less
+A Clojure library designed to cover basic needs of packing|unpacking exchange messages, storable chunks etc.
+And to check their consistency.
 
 image:https://img.shields.io/clojars/v/net.tbt-post/zlib-tiny.svg[]
 
@@ -11,10 +11,14 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
 
 [source,clojure]
 ----
-[net.tbt-post/zlib-tiny "0.2.5"]
+[net.tbt-post/zlib-tiny "0.3.0"]
 ----
 
-[source, clojure]
+=== Compress
+
+==== ZLib
+
+[source,clojure]
 ----
 ;; ZLib Example
 
@@ -32,7 +36,9 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
     bytes->str)
 ----
 
-[source, clojure]
+==== GZip
+
+[source,clojure]
 ----
 ;; GZip Example
 
@@ -48,11 +54,63 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
     bytes->str)
 ----
 
-[source, clojure]
+=== Checksums
+
+==== CRC
+
+[source,clojure]
 ----
 ;; CRC32 example
 (crc32 (.getBytes "123456789"))
 => 3421780262
+----
+
+[source,clojure]
+----
+;; CRC64 example
+(crc64 (.getBytes "123456789"))
+=> -7395533204333446662
+----
+
+==== Digests
+
+[source,shell]
+----
+$ echo -n 'test it!' | md5
+f4214812f0247f69661fd29e0fca6496
+
+$ echo -n 'test it!' | shasum -a 1
+1393ce5dfcf39109a420eb583ecfdeacc28c783a  -
+
+$ echo -n 'test it!' | shasum -a 256
+9c507d01834b2749d088122a7b3d200957f9b25579b5ce6b490e3b2067ee4f66  -
+----
+
+[source,clojure]
+----
+(import '(org.apache.commons.codec.binary Hex))
+(-> "test it!" str->bytes md5 Hex/encodeHex String.)
+=> "f4214812f0247f69661fd29e0fca6496"
+(-> "test it!" str->bytes sha-1 Hex/encodeHex String.)
+=> "1393ce5dfcf39109a420eb583ecfdeacc28c783a"
+(-> "test it!" str->bytes sha-256 Hex/encodeHex String.)
+=> "9c507d01834b2749d088122a7b3d200957f9b25579b5ce6b490e3b2067ee4f66"
+----
+
+== Test
+
+[source,text]
+----
+$ lein test
+
+...
+
+lein test zlib-tiny.checksum
+
+lein test zlib-tiny.compress
+
+Ran 3 tests containing 7 assertions.
+0 failures, 0 errors.
 ----
 
 == Manual Build

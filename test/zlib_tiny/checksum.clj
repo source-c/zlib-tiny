@@ -17,18 +17,18 @@
                                                   str->bytes
                                                   md5
                                                   Hex/encodeHex
-                                                  (String.)))))
+                                                  String.))))
   (testing "SHA1"
     (is (= "1393ce5dfcf39109a420eb583ecfdeacc28c783a"
            (-> test-string
                str->bytes
                sha-1
                Hex/encodeHex
-               (String.)))))
+               String.))))
   (testing "SHA256"
     (is (= "9c507d01834b2749d088122a7b3d200957f9b25579b5ce6b490e3b2067ee4f66"
            (-> test-string
                str->bytes
                sha-256
                Hex/encodeHex
-               (String.))))))
+               String.)))))
