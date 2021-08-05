@@ -14,6 +14,8 @@ Add the following to your http://github.com/technomancy/leiningen[Leiningen's] `
 [net.tbt-post/zlib-tiny "0.3.1"]
 ----
 
+CAUTION: From version v0.3.1 and upward the library requires Java class versions 60.0 and newer, thus if in your needs is to use it with Java 1.8 please switch back to older (0.2.x) version of the library or try to rebuild the library locally.
+
 === Compress
 
 ==== ZLib
