@@ -84,32 +84,37 @@
 (comment "GZip Example"
          (bytes->str (gunzip (gzip (str->bytes "test it!")))))
 
+(defmacro wrap-crc [impl b]
+  `(let [o# (new ~impl)]
+     (.update o# ~b)
+     (.getValue o#)))
+
 (defn crc32
   ^Long [^bytes b]
-  (let [o (CRC32.)]
-    (.update o b)
-    (.getValue o)))
+  (wrap-crc CRC32 b))
 
 (defn crc64
   ^Long [^bytes b]
-  (let [o (CRC64.)]
-    (.update o b)
-    (.getValue o)))
+  (wrap-crc CRC64 b))
+
+(defmacro wrap-digest [algn b]
+  `(let [o# ^MessageDigest (MessageDigest/getInstance ~algn)]
+     (.update o# ~b)
+     (.digest o#)))
 
 (defn md5
   ^bytes [^bytes b]
-  (let [o (MessageDigest/getInstance "md5")]
-    (.update o b)
-    (.digest o)))
+  (wrap-digest "md5" b))
+
 
 (defn sha-1
   ^bytes [^bytes b]
-  (let [o (MessageDigest/getInstance "sha1")]
-    (.update o b)
-    (.digest o)))
+  (wrap-digest "sha1" b))
 
 (defn sha-256
   ^bytes [^bytes b]
-  (let [o (MessageDigest/getInstance "sha256")]
-    (.update o b)
-    (.digest o)))
+  (wrap-digest "sha256" b))
+
+(defn sha-512
+  ^bytes [^bytes b]
+  (wrap-digest "sha-512" b))
