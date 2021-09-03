@@ -3,7 +3,13 @@
 A Clojure library designed to cover basic needs of packing|unpacking exchange messages, storable chunks etc.
 And to check their consistency.
 
+image:https://img.shields.io/github/license/source-c/zlib-tiny[GitHub]
 image:https://img.shields.io/clojars/v/net.tbt-post/zlib-tiny.svg[]
+image:https://img.shields.io/clojars/dt/net.tbt-post/zlib-tiny[ClojarsDownloads]
+image:https://img.shields.io/github/v/release/source-c/zlib-tiny[GitHub release (latest by date)]
+image:https://img.shields.io/github/release-date/source-c/zlib-tiny[GitHub Release Date]
+image:https://img.shields.io/github/v/tag/source-c/zlib-tiny[GitHub tag (latest by date)]
+image:https://img.shields.io/github/last-commit/source-c/zlib-tiny[GitHub last commit]
 
 == Usage
 
