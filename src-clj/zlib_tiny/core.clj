@@ -80,9 +80,11 @@
    (when b
      (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)))))
   ([b level]
-   (let [deflater (Deflater. level)]
-     (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)
-                                                deflater)))))
+   (let [deflater (Deflater. level)
+         ba (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)
+                                                       deflater))]
+     (.end deflater)
+     ba)))
 
 (comment "ZLib Example"
          (bytes->str (force-byte-array (inflate (deflate (str->bytes "test it!"))))))
