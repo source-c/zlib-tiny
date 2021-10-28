@@ -1,10 +1,10 @@
-name: Clojure CI
+name: Clojure CI for trunk
 
 on:
   push:
-    branches: [ master ]
+    branches: [ trunk ]
   pull_request:
-    branches: [ master ]
+    branches: [ trunk ]
 
 jobs:
   build:
