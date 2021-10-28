@@ -1,9 +1,10 @@
 (ns zlib-tiny.core
   (:import (java.util.zip InflaterInputStream
+                          Inflater
                           GZIPInputStream
                           GZIPOutputStream
                           DeflaterInputStream
-                          Inflater
+                          Deflater
                           ZipException
                           CRC32)
            (zlib_tiny CRC64)
@@ -75,9 +76,15 @@
 
 (defn deflate
   "Returns a deflate'd version of the given byte array."
-  [b]
-  (when b
-    (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)))))
+  ([b]
+   (when b
+     (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)))))
+  ([b level]
+   (let [deflater (Deflater. level)
+         ba (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)
+                                                       deflater))]
+     (.end deflater)
+     ba)))
 
 (comment "ZLib Example"
          (bytes->str (force-byte-array (inflate (deflate (str->bytes "test it!"))))))
