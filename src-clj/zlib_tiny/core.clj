@@ -104,17 +104,17 @@
 
 (defn md5
   ^bytes [^bytes b]
-  (wrap-digest "md5" b))
+  (wrap-digest "MD5" b))
 
 
 (defn sha-1
   ^bytes [^bytes b]
-  (wrap-digest "sha1" b))
+  (wrap-digest "SHA-1" b))
 
 (defn sha-256
   ^bytes [^bytes b]
-  (wrap-digest "sha256" b))
+  (wrap-digest "SHA-256" b))
 
 (defn sha-512
   ^bytes [^bytes b]
-  (wrap-digest "sha-512" b))
+  (wrap-digest "SHA-512" b))
