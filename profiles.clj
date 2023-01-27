@@ -3,8 +3,7 @@
             :target-path   "target/%s"
             :clean-targets ^{:protect false} [:target-path]
 
-            :plugins       [[org.apache.maven.wagon/wagon-ssh-external "3.5.2"]
-                            [org.apache.maven.wagon/wagon-http-lightweight "3.5.2"]]}
+            :plugins       []}
 
  :provided {:dependencies      [[org.clojure/clojure "1.11.1"]]
             :source-paths      #{"src-clj"}
