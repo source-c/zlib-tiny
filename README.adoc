@@ -82,16 +82,18 @@ CAUTION: From version v0.3.2 and upward the library may require Java class versi
 
 [source,clojure]
 ----
-;; Adler32 example
-(adler32 (.getBytes "123456789"))
-=> 152961502
-----
-
-[source,clojure]
-----
 ;; CRC64 example
 (crc64 (.getBytes "123456789"))
 => -7395533204333446662
+----
+
+==== Alternatives
+
+[source,clojure]
+----
+;; Adler32 example
+(adler32 (.getBytes "123456789"))
+=> 152961502
 ----
 
 ==== Digests
