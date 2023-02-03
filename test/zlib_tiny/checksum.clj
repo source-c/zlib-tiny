@@ -16,6 +16,9 @@
     (testing "CRC32C"
       (println "CRC32C checks:")
       (is (= 3808858755 (time (crc32c bs))) "CRC32C mismatch"))
+    (testing "Adler32"
+      (println "Adler32 checks:")
+      (is (= 152961502 (time (adler32 bs))) "Adler32 mismatch"))
     (testing "CRC64"
       (println "CRC64 checks:")
       (is (= -7395533204333446662 (time (crc64 bs))) "CRC64 mismatch"))))

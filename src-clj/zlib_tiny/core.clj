@@ -6,8 +6,9 @@
                           DeflaterInputStream
                           Deflater
                           ZipException
-                          CRC32 CRC32C)
-           (zlib_tiny CRC64)
+                          CRC32
+                          Adler32)
+           (zlib_tiny CRC32C CRC64)
            (org.apache.commons.io IOUtils)
            (java.security MessageDigest)
            (java.io ByteArrayInputStream
@@ -75,7 +76,7 @@
         (InflaterInputStream. stream (Inflater. true))))))
 
 (defn deflate
-  "Returns a deflate'd version of the given byte array."
+  "Returns deflate'd version of the given byte array."
   ([b]
    (when b
      (IOUtils/toByteArray (DeflaterInputStream. (ByteArrayInputStream. b)))))
@@ -103,6 +104,10 @@
 (defn crc32c
   ^Long [^bytes b]
   (wrap-crc CRC32C b))
+
+(defn adler32
+  ^Long [^bytes b]
+  (wrap-crc Adler32 b))
 
 (defn crc64
   ^Long [^bytes b]
