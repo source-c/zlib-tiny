@@ -41,6 +41,12 @@
                str->bytes
                sha-256
                hexlify))))
+  (testing "SHA384"
+    (is (= "6e5cc5271b2255f2cf4154c3170c5fb09059c79d28d182ac2caa59bd607ea87c09637d8f2f7b400ac80810f13027716a"
+           (-> test-string
+               str->bytes
+               sha-384
+               hexlify))))
   (testing "SHA512"
     (is (= "15353093ef47d2eadefc55d7bc641b6f1150e0b28a609d2368394748091f20b9125e98fe0603b2fbe57f9d65a9b286a8d0dbf70e8f597525051b6f9220e9b61f"
            (-> test-string

@@ -131,6 +131,10 @@
   ^bytes [^bytes b]
   (wrap-digest "SHA-256" b))
 
+(defn sha-384
+  ^bytes [^bytes b]
+  (wrap-digest "SHA-384" b))
+
 (defn sha-512
   ^bytes [^bytes b]
   (wrap-digest "SHA-512" b))
