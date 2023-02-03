@@ -6,10 +6,19 @@
 (def test-string "test it!")
 
 (deftest checksums
-  (testing "CRC32"
-    (is (= 3421780262 (crc32 (.getBytes "123456789")))))
-  (testing "CRC64"
-    (is (= -7395533204333446662 (crc64 (.getBytes "123456789"))))))
+  (let [input "123456789"
+        bs (.getBytes input)]
+    (println "Test input string:" input)
+    (println "Test input bytes:" (hexlify bs))
+    (testing "CRC32"
+      (println "CRC32 checks:")
+      (is (= 3421780262 (time (crc32 bs))) "CRC32 mismatch"))
+    (testing "CRC32C"
+      (println "CRC32C checks:")
+      (is (= 3808858755 (time (crc32c bs))) "CRC32C mismatch"))
+    (testing "CRC64"
+      (println "CRC64 checks:")
+      (is (= -7395533204333446662 (time (crc64 bs))) "CRC64 mismatch"))))
 
 (deftest digests
   (testing "MD5"

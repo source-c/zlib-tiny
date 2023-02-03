@@ -6,7 +6,7 @@
                           DeflaterInputStream
                           Deflater
                           ZipException
-                          CRC32)
+                          CRC32 CRC32C)
            (zlib_tiny CRC64)
            (org.apache.commons.io IOUtils)
            (java.security MessageDigest)
@@ -99,6 +99,10 @@
 (defn crc32
   ^Long [^bytes b]
   (wrap-crc CRC32 b))
+
+(defn crc32c
+  ^Long [^bytes b]
+  (wrap-crc CRC32C b))
 
 (defn crc64
   ^Long [^bytes b]
