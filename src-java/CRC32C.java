@@ -106,9 +106,25 @@ public final class CRC32C implements Checksum {
     @Override
     public void update(byte[] bArray, int off, int len) {
         long newCrc = crc ^ LONG_MASK;
-        for (int i = off; i < off + len; i++) {
-            newCrc = updateByte(bArray[i], newCrc);
+        int end = off + len;
+        
+        // Process 8 bytes at a time for better performance
+        int fastEnd = end - 7;
+        int i = off;
+        while (i < fastEnd) {
+            // Process a block of 8 bytes using inner loop
+            for (int j = 0; j < 8; j++) {
+                newCrc = updateByte(bArray[i + j], newCrc);
+            }
+            i += 8;
         }
+        
+        // Process remaining bytes
+        while (i < end) {
+            newCrc = updateByte(bArray[i], newCrc);
+            i++;
+        }
+        
         crc = newCrc ^ LONG_MASK;
     }
 
