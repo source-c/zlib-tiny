@@ -96,6 +96,33 @@ CAUTION: From version v0.3.2 and upward the library may require Java class versi
 => 152961502
 ----
 
+=== Streaming API for Large Data
+
+For processing large files without loading them entirely into memory:
+
+[source,clojure]
+----
+;; Streaming compression example
+(require '[clojure.java.io :as io])
+(require '[zlib-tiny.core :as z])
+
+;; Compress a large file
+(with-open [input (io/input-stream "large-data.txt")
+            output (io/output-stream "large-data.gz")]
+  (z/copy-compress input output z/gzip-stream))
+
+;; Decompress a large file  
+(with-open [input (io/input-stream "large-data.gz")
+            output (io/output-stream "large-data-decompressed.txt")]
+  (z/copy-decompress input output z/gunzip-stream))
+
+;; Direct stream creation for custom processing
+(with-open [input (io/input-stream "data.txt")
+            compressed (z/deflate-stream input)]
+  ;; Process compressed stream
+  )
+----
+
 ==== Digests
 
 [source,shell]
@@ -152,7 +179,11 @@ CRC64 checks:
 
 lein test zlib-tiny.compress
 
-Ran 3 tests containing 13 assertions.
+lein test zlib-tiny.performance
+...
+
+Ran 4 tests containing 14 assertions.
+...
 ----
 
 == Manual Build
@@ -164,7 +195,7 @@ $ lein install
 
 == License
 
-Copyright © 2017-2023
+Copyright © 2017-2025
 
 Distributed under the http://www.apache.org/licenses/LICENSE-2.0[Apache License v 2.0]
 

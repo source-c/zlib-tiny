@@ -34,9 +34,21 @@ public class CRC64 {
 
     public void update(byte[] buf, int off, int len) {
         int end = off + len;
-
-        while (off < end)
+        
+        // Process 8 bytes at a time for better performance
+        int fastEnd = end - 7;
+        while (off < fastEnd) {
+            // Process a block of 8 bytes using inner loop
+            for (int j = 0; j < 8; j++) {
+                crc = crcTable[(buf[off + j] ^ (int) crc) & 0xFF] ^ (crc >>> 8);
+            }
+            off += 8;
+        }
+        
+        // Process remaining bytes
+        while (off < end) {
             crc = crcTable[(buf[off++] ^ (int) crc) & 0xFF] ^ (crc >>> 8);
+        }
     }
 
     public long getValue() {

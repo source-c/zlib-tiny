@@ -16,17 +16,30 @@
                     BufferedInputStream
                     InputStream)))
 
+(def ^:private ^:const STREAM_MARK_LIMIT 512)
+(def ^:private ^:const DEFAULT_BUFFER_SIZE 8192)
+
+(def ^:private ^ThreadLocal buffer-pool
+  (proxy [ThreadLocal] []
+    (initialValue []
+      (byte-array DEFAULT_BUFFER_SIZE))))
+
+(defn- get-buffer 
+  "Gets a reusable buffer from the thread-local pool"
+  []
+  (.get buffer-pool))
+
 (defn str->bytes
   "Returns the encoding's bytes corresponding to the given string. If no
   encoding is specified, UTF-8 is used."
   [^String s & [^String encoding]]
-  (.getBytes s (or encoding "UTF-8")))
+  (.getBytes s ^String (or encoding "UTF-8")))
 
 (defn bytes->str
   "Returns the String corresponding to the given encoding's decoding of the
   given bytes. If no encoding is specified, UTF-8 is used."
   [^bytes b & [^String encoding]]
-  (String. b (or encoding "UTF-8")))
+  (String. b ^String (or encoding "UTF-8")))
 
 (defn gunzip
   "Returns a gunzip'd version of the given byte array."
@@ -43,8 +56,14 @@
   [b]
   (when b
     (let [baos (ByteArrayOutputStream.)
-          gos (GZIPOutputStream. baos)]
-      (IOUtils/copy (ByteArrayInputStream. b) gos)
+          gos (GZIPOutputStream. baos ^int DEFAULT_BUFFER_SIZE)
+          buffer (get-buffer)
+          bis (ByteArrayInputStream. b)]
+      (loop []
+        (let [n (.read bis buffer 0 DEFAULT_BUFFER_SIZE)]
+          (when (pos? n)
+            (.write gos buffer 0 n)
+            (recur))))
       (.close gos)
       (.toByteArray baos))))
 
@@ -66,7 +85,7 @@
     (let [stream (BufferedInputStream. (if (instance? InputStream b)
                                          b
                                          (ByteArrayInputStream. b)))
-          _ (.mark stream 512)
+          _ (.mark stream STREAM_MARK_LIMIT)
           iis (InflaterInputStream. stream)
           readable? (try (.read iis) true
                          (catch ZipException _ false))]
@@ -138,3 +157,78 @@
 (defn sha-512
   ^bytes [^bytes b]
   (wrap-digest "SHA-512" b))
+
+;; Streaming API for large data
+
+(defn deflate-stream
+  "Returns a DeflaterInputStream for streaming deflation.
+   Useful for large files that shouldn't be loaded entirely into memory."
+  ([^InputStream input-stream]
+   (DeflaterInputStream. input-stream))
+  ([^InputStream input-stream level]
+   (DeflaterInputStream. input-stream (Deflater. level))))
+
+(defn inflate-stream
+  "Returns an InflaterInputStream for streaming inflation.
+   Useful for large files that shouldn't be loaded entirely into memory."
+  [^InputStream input-stream]
+  (let [stream (BufferedInputStream. input-stream)
+        _ (.mark stream STREAM_MARK_LIMIT)
+        iis (InflaterInputStream. stream)
+        readable? (try (.read iis) true
+                       (catch ZipException _ false))]
+    (.reset stream)
+    (if readable?
+      (InflaterInputStream. stream)
+      (InflaterInputStream. stream (Inflater. true)))))
+
+(defn gzip-stream
+  "Returns a GZIPOutputStream for streaming gzip compression.
+   Useful for large files that shouldn't be loaded entirely into memory."
+  ^GZIPOutputStream
+  ([^java.io.OutputStream output-stream]
+   (GZIPOutputStream. output-stream ^int DEFAULT_BUFFER_SIZE))
+  ([^java.io.OutputStream output-stream ^Integer buffer-size]
+   (GZIPOutputStream. output-stream ^int buffer-size)))
+
+(defn gunzip-stream
+  "Returns a GZIPInputStream for streaming gzip decompression.
+   Useful for large files that shouldn't be loaded entirely into memory."
+  ([^InputStream input-stream]
+   (GZIPInputStream. input-stream ^int DEFAULT_BUFFER_SIZE))
+  ([^InputStream input-stream buffer-size]
+   (GZIPInputStream. input-stream ^int buffer-size)))
+
+(defn copy-compress
+  "Copies data from input-stream to output-stream with compression.
+   Returns the number of bytes written."
+  ^long [^InputStream input-stream ^java.io.OutputStream output-stream compress-fn]
+  (let [^java.io.OutputStream compressed-stream (compress-fn output-stream)
+        ^bytes buffer (get-buffer)]
+    (try
+      (loop [total (long 0)]
+        (let [n (.read input-stream buffer 0 DEFAULT_BUFFER_SIZE)]
+          (if (pos? n)
+            (do
+              (.write compressed-stream buffer 0 n)
+              (recur (+ total n)))
+            total)))
+      (finally
+        (.close compressed-stream)))))
+
+(defn copy-decompress
+  "Copies data from input-stream to output-stream with decompression.
+   Returns the number of bytes written."
+  ^long [^InputStream input-stream ^java.io.OutputStream output-stream decompress-fn]
+  (let [^InputStream decompressed-stream (decompress-fn input-stream)
+        ^bytes buffer (get-buffer)]
+    (try
+      (loop [total (long 0)]
+        (let [n (.read decompressed-stream buffer 0 DEFAULT_BUFFER_SIZE)]
+          (if (pos? n)
+            (do
+              (.write output-stream buffer 0 n)
+              (recur (+ total n)))
+            total)))
+      (finally
+        (.close decompressed-stream)))))
