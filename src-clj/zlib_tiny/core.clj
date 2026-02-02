@@ -86,9 +86,12 @@
                                          b
                                          (ByteArrayInputStream. b)))
           _ (.mark stream STREAM_MARK_LIMIT)
-          iis (InflaterInputStream. stream)
-          readable? (try (.read iis) true
-                         (catch ZipException _ false))]
+          probe-inflater (Inflater.)
+          readable? (try
+                      (.read (InflaterInputStream. stream probe-inflater))
+                      true
+                      (catch ZipException _ false)
+                      (finally (.end probe-inflater)))]
       (.reset stream)
       (if readable?
         (InflaterInputStream. stream)
@@ -174,9 +177,12 @@
   [^InputStream input-stream]
   (let [stream (BufferedInputStream. input-stream)
         _ (.mark stream STREAM_MARK_LIMIT)
-        iis (InflaterInputStream. stream)
-        readable? (try (.read iis) true
-                       (catch ZipException _ false))]
+        probe-inflater (Inflater.)
+        readable? (try
+                    (.read (InflaterInputStream. stream probe-inflater))
+                    true
+                    (catch ZipException _ false)
+                    (finally (.end probe-inflater)))]
     (.reset stream)
     (if readable?
       (InflaterInputStream. stream)
