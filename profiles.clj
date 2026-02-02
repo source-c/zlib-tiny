@@ -5,7 +5,7 @@
 
             :plugins       []}
 
- :provided {:dependencies      [[org.clojure/clojure "1.12.1"]]
+ :provided {:dependencies      [[org.clojure/clojure "1.12.4"]]
             :source-paths      #{"src-clj"}
             :java-source-paths #{"src-java"}
             :resource-paths    ["resources"]
