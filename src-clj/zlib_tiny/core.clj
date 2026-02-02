@@ -127,6 +127,12 @@
   ^Long [^bytes b]
   (wrap-crc CRC32C b))
 
+(defn crc32c-accelerated?
+  "Returns true if CRC32C is using JDK hardware acceleration (Java 9+).
+   Useful for diagnostics and performance testing."
+  []
+  (CRC32C/isHardwareAccelerated))
+
 (defn adler32
   ^Long [^bytes b]
   (wrap-crc Adler32 b))

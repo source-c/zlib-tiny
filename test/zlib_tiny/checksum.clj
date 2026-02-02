@@ -53,3 +53,29 @@
                str->bytes
                sha-512
                hexlify)))))
+
+(deftest crc32c-hybrid
+  (testing "CRC32C hardware acceleration detection"
+    ;; On Java 9+, this should return true
+    (let [accelerated (crc32c-accelerated?)]
+      (println "CRC32C hardware accelerated:" accelerated)
+      (is (boolean? accelerated) "crc32c-accelerated? should return a boolean")))
+
+  (testing "CRC32C produces correct results regardless of implementation"
+    ;; Known test vector from RFC 3720
+    (let [input "123456789"
+          bs (.getBytes input)
+          expected 3808858755]
+      (is (= expected (crc32c bs))
+          "CRC32C should produce correct result for standard test vector")))
+
+  (testing "CRC32C handles various data sizes"
+    (let [small (byte-array 10 (byte 0x42))
+          medium (byte-array 10000 (byte 0x42))
+          large (byte-array 100000 (byte 0x42))]
+      ;; These should all complete without error and produce consistent results
+      (is (pos? (crc32c small)) "Small data should produce valid CRC")
+      (is (pos? (crc32c medium)) "Medium data should produce valid CRC")
+      (is (pos? (crc32c large)) "Large data should produce valid CRC")
+      ;; Same input should produce same output
+      (is (= (crc32c small) (crc32c small)) "CRC32C should be deterministic"))))
